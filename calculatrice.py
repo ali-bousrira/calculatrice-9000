@@ -1,3 +1,7 @@
+#importation de biblioteque
+import os
+
+#verification des types de saisie
 def is_number(d):
     try:
         float(d)
@@ -5,15 +9,15 @@ def is_number(d):
     except ValueError:
         return False
 
-
+#verification du saisie des nombre
 def nb_input():
-    n = input("Entrez un nombre : \n")
+    n = input("entrez un nombre : \n")
     while  not is_number(n):
-        n = input("Entrez un nombre : \n")
+        n = input("entrez un nombre : \n")
     n = float(n)
     return n
 
-
+#verification du saisie de l'operateur
 def op_input ():
 
     test_l = ["+", "-", "*", "/", "="]
@@ -24,6 +28,7 @@ def op_input ():
 
     return x
 
+#fonction de calcul
 def calcul (l_hist):
 
     hist = open("historique.txt", "a")
@@ -70,7 +75,11 @@ def calcul (l_hist):
         print (t)
     hist.close()
 
+#fonction de verification de contenue de fichier
+def is_file_empty(file_path):
+    return os.path.getsize(file_path) == 0
 
+#fonctiond de supression d'une ligne de fichier
 def del_hist (n_ligne):
     try:
         with open('historique.txt', 'r') as fr:
@@ -88,6 +97,7 @@ def del_hist (n_ligne):
     except:
         print("Oops! erruer")
 
+#foanction d'affichage du fichier historique.txt
 def histoire ():
     nb_ligne = 1
     hist = open("historique.txt", "r")
@@ -98,10 +108,13 @@ def histoire ():
 
         ligne = hist.readline()
         nb_ligne += 1
-    ef_test = input ("voulez vous effacer une ligne oui ou non : \n")
-    while not (ef_test == "oui" or ef_test == "non"):
+    if not is_file_empty("historique.txt"):
         ef_test = input ("voulez vous effacer une ligne oui ou non : \n")
-    while ef_test == "oui":
+        while not (ef_test == "oui" or ef_test == "non"):
+            ef_test = input ("voulez vous effacer une ligne oui ou non : \n")
+
+    while ef_test == "oui" and not is_file_empty("historique.txt"):
+        print ("donnez la ligne a effacer ", end ="")
         n_ligne = nb_input()
         
         del_hist(n_ligne)
@@ -114,9 +127,10 @@ def histoire ():
 
             ligne = hist.readline()
             nb_ligne += 1
-        ef_test = input ("voulez vous effacer une ligne oui ou non : \n")
-        while not (ef_test == "oui" or ef_test == "non"):
+        if not is_file_empty("historique.txt"):
             ef_test = input ("voulez vous effacer une ligne oui ou non : \n")
+            while not (ef_test == "oui" or ef_test == "non"):
+                ef_test = input ("voulez vous effacer une ligne oui ou non : \n")
 
 
 
@@ -130,6 +144,7 @@ if (chois == "oui"):
     try:
         histoire()
     except:
-        print ("le fichier nexiste pas")
+        print ("le fichier nexiste pas ou il est vide")
+        calcul (l_hist)
 else:
     calcul (l_hist)
